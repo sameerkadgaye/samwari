@@ -43,6 +43,36 @@
         font-family:'Fredoka', cursive;
     }
 
+    .hero-heading {
+        font-family: 'Fredoka', cursive;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.02;
+        background: linear-gradient(90deg, #f43f5e 0%, #c026d3 45%, #7c3aed 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 18px 45px rgba(220, 38, 116, 0.16);
+        max-width: 920px;
+        margin: 0 auto;
+    }
+
+    .hero-heading .highlight-text {
+        display: inline-block;
+        background: linear-gradient(90deg, #f472b6 0%, #fb7185 45%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .hero-emoji {
+        display: inline-block;
+        color: #ff77b1;
+        text-shadow: 0 6px 18px rgba(255, 116, 165, 0.28);
+        font-size: 1.05em;
+        vertical-align: middle;
+    }
+
     .glass-card{
         background:rgba(255,255,255,.72);
         backdrop-filter:blur(14px);
@@ -448,8 +478,8 @@
         <div class="relative max-w-6xl mx-auto text-center">
 
 
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-rose-600">
-                Happy Birthday 🥳 to My Very Special <span class="text-fuchsia-600">❤️ Bubu</span> in the World 🌍
+            <h1 class="hero-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight">
+                Happy Birthday <span class="hero-emoji">🥳</span> to My Most Special <span class="highlight-text">❤️ Bubu</span> in the Whole World <span class="hero-emoji">🌍</span>
             </h1>
 
             <div class="mt-8 sm:mt-10 flex flex-col items-center">
@@ -492,7 +522,7 @@
                     tap each card. slowly✨
                 </h2>
                 <p class="mt-3 sm:mt-4 max-w-2xl mx-auto text-sm sm:text-base text-gray-600 px-2">
-                    each one is a tiny reason, don't rush 😌 and pls don't pretend you aren't smiling.
+                    each one is a tiny reason to Love You ❤️, don't rush 😌 and pls don't pretend you aren't smiling 😁.
                 </p>
             </div>
 
@@ -734,6 +764,32 @@
                         .heart-core {
                             animation: heartBeat 1.5s ease-in-out infinite;
                         }
+
+                        .heart-name {
+                            position: absolute;
+                            inset: 0;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-family: 'Fredoka', 'Nunito', sans-serif;
+                            font-weight: 800;
+                            font-style: italic;
+                            font-size: 1.3rem;
+                            color: #ffffff;
+                            text-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+                            letter-spacing: 0.05em;
+                            opacity: 0;
+                            transform: scale(0.88);
+                            transition: opacity 0.22s ease, transform 0.22s ease;
+                            pointer-events: none;
+                            z-index: 2;
+                        }
+
+                        .heart-name.show {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+
                         @keyframes heartFloat {
                             0%, 100% { transform: scale(1); }
                             50% { transform: scale(1.05); }
@@ -767,6 +823,7 @@
                             <path d="M50,90 C20,70 5,55 5,40 C5,25 15,15 28,15 C38,15 48,22 50,30 C52,22 62,15 72,15 C85,15 95,25 95,40 C95,55 80,70 50,90 Z" 
                                   fill="#e11d48"/>
                         </svg>
+                        <span class="heart-name">Gayatri</span>
                     </div>
                 </div>
             </div>
@@ -779,10 +836,10 @@
 
             <div class="mt-12">
                 <div class="gift-card glass-card mx-auto max-w-md p-8 text-center bg-white/90">
-                    <h3 class="text-2xl font-bold text-rose-500 mb-3">a little gift for you</h3>
+                    <h3 class="text-2xl font-bold text-rose-500 mb-3">a little creativity for you</h3>
                     <p class="text-sm text-rose-600 mb-6">tap the button and enjoy the surprise with sound.</p>
                     <button class="gift-button inline-flex items-center justify-center rounded-full bg-rose-500 px-8 py-3 text-white text-sm font-semibold transition hover:bg-rose-600 focus:outline-none" onclick="openGiftVideo()">
-                        Tap to gift
+                        Tap to open
                     </button>
                 </div>
             </div>
@@ -806,7 +863,7 @@
     <!-- FOOTER -->
     <footer class="text-center py-8 sm:py-10 md:py-12 px-4">
         <p class="text-sm sm:text-base md:text-lg text-rose-400 font-bold">
-            Made with ❤️, cuddles and lots of Bubu & Dudu energy.
+            Made with love ❤️, cuddles and lots of Dudu & Bubu energy.
         </p>
     </footer>
 
@@ -819,6 +876,18 @@ function expandHearts(event) {
     setTimeout(() => {
         heart.style.transform = 'scale(1)';
     }, 300);
+
+    const nameTag = heart.querySelector('.heart-name');
+    if (nameTag) {
+        nameTag.classList.add('show');
+        if (nameTag.hideTimeout) {
+            clearTimeout(nameTag.hideTimeout);
+        }
+        nameTag.hideTimeout = setTimeout(() => {
+            nameTag.classList.remove('show');
+        }, 1400);
+    }
+
     launchConfetti();
 }
 
