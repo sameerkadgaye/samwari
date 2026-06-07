@@ -60,7 +60,13 @@
         animation:float 4s ease-in-out infinite;
     }
 
-    .reason-card{\n        position:relative;\n        overflow:hidden;\n        min-height:280px;\n        border-radius:2rem;\n        cursor:pointer;\n    }\n\n    @media (max-width: 640px) {\n        .reason-card {\n            min-height:260px;\n            border-radius:1.5rem;\n            padding:1rem !important;\n        }\n        .reason-card .card-back {\n            padding:1.5rem !important;\n        }\n    }
+    .reason-card{
+        position:relative;
+        overflow:hidden;
+        min-height:280px;
+        border-radius:2rem;
+        cursor:pointer;
+    }
 
     @media (max-width: 640px) {
         .reason-card {
@@ -255,6 +261,7 @@
     #heroImage {
         transition: opacity 0.3s ease, transform 0.3s ease;
         transform-style: preserve-3d;
+        backface-visibility: hidden;
     }
 
     .gift-card {
@@ -453,6 +460,7 @@
                         id="heroImage"
                         src="assets/bubuEyeBlink.gif"
                         alt="Cute animal illustration"
+                        data-state="blink"
                         class="w-full h-auto rounded-[2rem] shadow-xl cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
                         onclick="swapHeroImage(this)"
                     />
@@ -845,14 +853,19 @@ function expandHearts(event) {
 }
 
 function swapHeroImage(img) {
+    const isBlinking = img.dataset.state === 'blink';
     img.style.opacity = '0';
     img.style.transform = 'scale(0.9) rotateY(180deg)';
     
     setTimeout(() => {
-        if (img.src.includes('bubuEyeBlink.gif')) {
+        if (isBlinking) {
             img.src = 'assets/origBubu.jpg';
+            img.alt = 'Surprise Bubu';
+            img.dataset.state = 'original';
         } else {
             img.src = 'assets/bubuEyeBlink.gif';
+            img.alt = 'Cute animal illustration';
+            img.dataset.state = 'blink';
         }
         img.style.opacity = '1';
         img.style.transform = 'scale(1) rotateY(0deg)';
