@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Happy Place ✨</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Canvas Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+    :root{
+        --pink:#ffdce5;
+        --peach:#ffe7d6;
+        --cream:#fff8ef;
+        --white:#fffdf9;
+        --text:#5d4c5c;
+    }
+
+    *{
+        font-family:'Nunito', sans-serif;
+    }
+
+    body{
+        background: linear-gradient(
+            135deg,
+            #fff6f8 0%,
+            #ffe9ef 30%,
+            #fff5e8 70%,
+            #fffdf8 100%
+        );
+        color:var(--text);
+        overflow-x:hidden;
+    }
+
+    h1,h2,h3{
+        font-family:'Fredoka', cursive;
+    }
+
+    .glass-card{
+        background:rgba(255,255,255,.72);
+        backdrop-filter:blur(14px);
+        border:1px solid rgba(255,255,255,.65);
+        box-shadow:0 18px 45px rgba(255,182,193,.18);
+        transition:all .35s ease;
+    }
+
+    .glass-card:hover{
+        transform:translateY(-8px) scale(1.03);
+        box-shadow:0 20px 45px rgba(255,182,193,.35);
+    }
+
+    .hero-glow{
+        animation:float 4s ease-in-out infinite;
+    }
+
+    .reason-card{\n        position:relative;\n        overflow:hidden;\n        min-height:280px;\n        border-radius:2rem;\n        cursor:pointer;\n    }\n\n    @media (max-width: 640px) {\n        .reason-card {\n            min-height:260px;\n            border-radius:1.5rem;\n            padding:1rem !important;\n        }\n        .reason-card .card-back {\n            padding:1.5rem !important;\n        }\n    }
+
+    @media (max-width: 640px) {
+        .reason-card {
+            min-height:260px;
+            border-radius:1.5rem;
+            padding:1rem !important;
+        }
+        .reason-card .card-back {
+            padding:1.5rem !important;
+        }
+    }
+
+    .reason-card::before{
+        content:'';
+        position:absolute;
+        inset:0;
+        background:linear-gradient(135deg, rgba(255,255,255,.6), rgba(255,227,234,.45));
+        opacity:0;
+        transition:opacity .4s ease;
+    }
+
+    .reason-card:hover::before,
+    .reason-card.active::before{
+        opacity:1;
+    }
+
+    .reason-card .card-front,
+    .reason-card .card-back{
+        transition:all .35s ease;
+    }
+
+    .reason-card .card-back{
+        position:absolute;
+        inset:0;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:flex-start;
+        padding:2rem;
+        opacity:0;
+        pointer-events:none;
+    }
+
+    .reason-card.active .card-back{
+        opacity:1;
+        pointer-events:auto;
+    }
+
+    .reason-card.active .card-front{
+        opacity:0;
+        transform:translateY(-12px);
+    }
+
+    .reason-card .card-front{
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+        height:100%;
+    }
+
+    .reason-card .card-front .number {
+        font-size:3rem;
+        font-weight:800;
+        line-height:1;
+        color:#c8315b;
+    }
+
+    @media (max-width: 640px) {
+        .reason-card .card-front .number {
+            font-size:2.5rem;
+        }
+        .reason-card .card-front h3 {
+            font-size:1.25rem !important;
+        }
+        .reason-card .card-back h3 {
+            font-size:1.25rem !important;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .reason-card .card-front .number {
+            font-size:2.5rem;
+        }
+        .reason-card .card-front h3 {
+            font-size:1.25rem !important;
+        }
+        .reason-card .card-back h3 {
+            font-size:1.25rem !important;
+        }
+    }
+
+    .reason-card .card-front .prompt {
+        font-size:0.95rem;
+        letter-spacing:0.14em;
+        text-transform:uppercase;
+        color:#be4263;
+        font-weight:700;
+    }
+
+    .reason-card .card-back p {
+        color:#5e4c5f;
+        line-height:1.8;
+    }
+
+    @keyframes float{
+        0%,100%{
+            transform:translateY(0);
+        }
+        50%{
+            transform:translateY(-12px);
+        }
+    }
+
+    .polaroid{
+        background:white;
+        padding:12px;
+        border-radius:22px;
+        box-shadow:0 15px 35px rgba(0,0,0,.08);
+        transition:all .35s ease;
+    }
+
+    .polaroid:hover{
+        transform:rotate(0deg) scale(1.04);
+    }
+
+    .polaroid img {
+        width:100%;
+        height:22rem;
+        object-fit:cover;
+        display:block;
+        border-radius:1.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .polaroid img {
+            height:18rem;
+        }
+    }
+
+    .rotate-left{
+        transform:rotate(-3deg);
+    }
+
+    .rotate-right{
+        transform:rotate(3deg);
+    }
+
+    .section-title{
+        position:relative;
+        display:inline-block;
+    }
+
+    .section-title::after{
+        content:"";
+        width:70%;
+        height:8px;
+        border-radius:999px;
+        background:#ffd6e3;
+        position:absolute;
+        left:50%;
+        transform:translateX(-50%);
+        bottom:-8px;
+    }
+
+    #confetti-canvas{
+        position:fixed;
+        inset:0;
+        width:100%;
+        height:100%;
+        pointer-events:none;
+        z-index:0;
+    }
+
+    main{
+        position:relative;
+        z-index:1;
+    }
+
+    @keyframes heartBeat{
+        0%,100%{
+            transform:scale(1);
+        }
+        50%{
+            transform:scale(1.1);
+        }
+    }
+
+    .hero-image-container {
+        perspective: 1000px;
+    }
+
+    #heroImage {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        transform-style: preserve-3d;
+    }
+
+    .gift-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .gift-button {
+        box-shadow: 0 16px 32px rgba(236, 72, 153, 0.12);
+    }
+
+    .flip-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.55rem 0.95rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(15, 11, 24, 0.9);
+        color: #ffffff;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        backdrop-filter: blur(16px);
+        transition: transform 0.2s ease, background 0.2s ease;
+        pointer-events: auto;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+    }
+
+    .flip-indicator:hover {
+        transform: translateY(-1px);
+        background: rgba(15, 11, 24, 1);
+    }
+
+    .flip-arrow {
+        display: inline-flex;
+        font-size: 1rem;
+        transform: translateX(0);
+        transition: transform 0.2s ease;
+    }
+
+    .flip-indicator:hover .flip-arrow {
+        transform: translateX(2px);
+    }
+
+    @media (max-width: 640px) {
+        .flip-indicator {
+            left: 50%;
+            right: auto;
+            bottom: 0.9rem;
+            transform: translateX(-50%);
+            padding: 0.45rem 0.75rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    .video-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15, 11, 24, 0.88);
+        z-index: 999;
+        padding: 1.5rem;
+        overflow-y: auto;
+    }
+
+    .video-overlay.active {
+        display: flex;
+    }
+
+    .video-box {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 940px;
+        max-height: calc(100vh - 3rem);
+        border-radius: 2rem;
+        overflow: hidden;
+        box-shadow: 0 32px 90px rgba(0, 0, 0, 0.55);
+        background: #0f0a16;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .video-box video {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: auto;
+        max-height: 70vh;
+        object-fit: contain;
+        display: block;
+        background: #000;
+    }
+
+    .video-error {
+        margin: 1rem 1.5rem 1.5rem;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.95rem;
+        text-align: center;
+    }
+
+    .video-error a {
+        color: #f9a8d4;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .video-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 5;
+        min-width: 92px;
+        height: auto;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    .video-close:hover {
+        background: rgba(255, 255, 255, 0.28);
+    }
+
+    .heart-fall-container {
+        pointer-events: none;
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        z-index: 5;
+    }
+
+    .heart-fall-container .falling-heart {
+        position: absolute;
+        top: -3rem;
+        width: 1.75rem;
+        height: 1.75rem;
+        background: radial-gradient(circle at 50% 40%, #f472b6 0%, #db2777 65%);
+        clip-path: polygon(50% 0%, 69% 15%, 80% 34%, 80% 55%, 50% 100%, 20% 55%, 20% 34%, 31% 15%);
+        opacity: 0.95;
+        filter: drop-shadow(0 10px 20px rgba(219, 39, 119, 0.4));
+        animation: heartFall linear infinite;
+    }
+
+    .heart-fall-container .falling-heart:nth-child(2n) {
+        width: 1rem;
+        opacity: 0.85;
+    }
+
+    .heart-fall-container .falling-heart:nth-child(3n) {
+        width: 1.5rem;
+        opacity: 0.75;
+    }
+
+    @keyframes heartFall {
+        0% {
+            transform: translateY(-10px) translateX(0) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(110vh) translateX(35px) rotate(20deg);
+            opacity: 0;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<main>
+
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden py-16 sm:py-20 md:py-24 px-4 sm:px-6">
+        <div class="absolute inset-x-0 top-0 h-48 sm:h-56 md:h-72 bg-gradient-to-br from-pink-100 via-rose-100 to-yellow-50 opacity-90"></div>
+        <div class="relative max-w-6xl mx-auto text-center">
+
+
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-rose-600">
+                Happy Birthday to My Very Special <span class="text-fuchsia-600">Bubu</span> in the World
+            </h1>
+
+            <div class="mt-8 sm:mt-10 flex flex-col items-center">
+                <div class="hero-image-container relative w-full max-w-xs sm:max-w-md rounded-[2.5rem] bg-white/80 border border-white/80 shadow-2xl p-4 sm:p-6">
+                    <div class="absolute -top-4 sm:-top-6 left-4 sm:left-8 h-10 sm:h-14 w-10 sm:w-14 rounded-full bg-pink-200/90 blur-2xl"></div>
+                    <div class="absolute -right-4 sm:-right-8 top-12 sm:top-16 h-16 sm:h-20 w-16 sm:w-20 rounded-full bg-rose-200/90 blur-2xl"></div>
+                    <img
+                        id="heroImage"
+                        src="assets/bubuEyeBlink.gif"
+                        alt="Cute animal illustration"
+                        class="w-full h-auto rounded-[2rem] shadow-xl cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
+                        onclick="swapHeroImage(this)"
+                    />
+                </div>
+                <button class="flip-indicator mt-4" onclick="swapHeroImage(document.getElementById('heroImage'))" aria-label="Flip image">
+                    <span class="flip-arrow">➜</span>
+                    <span class="flip-text">See who</span>
+                </button>
+            </div>
+
+            <p class="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-rose-700/90 mt-6 sm:mt-8 leading-8 px-2">
+                Now sat down. it take a while. There’s like a million But okay, here’s some 🥺
+            </p>
+            <p class="mt-4 text-sm text-rose-500/70 uppercase tracking-[0.24em] font-semibold">
+                scroll. don't be shy.
+            </p>
+        </div>
+    </section>
+
+    <!-- REASONS CARDS -->
+    <section class="py-12 sm:py-16 md:py-20 px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto">
+
+            <div class="text-center mb-8 sm:mb-12 md:mb-16">
+                <p class="text-xs sm:text-sm font-semibold uppercase tracking-[0.28em] text-rose-400 mb-3">
+                    how this works
+                </p>
+                <h2 class="section-title text-3xl sm:text-4xl md:text-5xl font-bold text-rose-500">
+                    tap each card. slowly✨
+                </h2>
+                <p class="mt-3 sm:mt-4 max-w-2xl mx-auto text-sm sm:text-base text-gray-600 px-2">
+                    each one is a tiny reason, don't rush 😌 and pls don't pretend you aren't smiling.
+                </p>
+            </div>
+
+            <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+
+                <div class="reason-card glass-card p-6" onclick="toggleCard(this)">
+                    <div class="card-front">
+                        <div>
+                            <span class="text-sm uppercase tracking-[0.24em] text-rose-400 font-semibold">No 01</span>
+                        </div>
+                        <div class="mt-6">
+                            <div class="number">1</div>
+                            <h3 class="text-2xl font-bold text-rose-500 mt-4">your laugh</h3>
+                        </div>
+                        <div class="mt-6 prompt">tap me</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="flex justify-center mb-4">
+                            <img src="assets/1-bubuLaugh.gif" alt="Bubu hug" class="w-24 h-24 object-contain" />
+                        </div>
+                        <h3 class="text-2xl font-bold text-rose-500 mb-3">your laugh</h3>
+                        <p>it’s literally the cure to a bad day, like a whole pharmacy.</p>
+                    </div>
+                </div>
+
+                <div class="reason-card glass-card p-6" onclick="toggleCard(this)">
+                    <div class="card-front">
+                        <div>
+                            <span class="text-sm uppercase tracking-[0.24em] text-rose-400 font-semibold">No 02</span>
+                        </div>
+                        <div class="mt-6">
+                            <div class="number">2</div>
+                            <h3 class="text-2xl font-bold text-rose-500 mt-4">your hugs</h3>
+                        </div>
+                        <div class="mt-6 prompt">tap me</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="flex justify-center mb-4">
+                            <img src="assets/2-bubuHug.gif" alt="Bubu laugh" class="w-24 h-24 object-contain" />
+                        </div>
+                        <h3 class="text-2xl font-bold text-rose-500 mb-3">your hugs</h3>
+                        <p>they make time stop a lil. it’s kinda magic. don’t tell anyone.</p>
+                    </div>
+                </div>
+
+                <div class="reason-card glass-card p-6" onclick="toggleCard(this)">
+                    <div class="card-front">
+                        <div>
+                            <span class="text-sm uppercase tracking-[0.24em] text-rose-400 font-semibold">No 03</span>
+                        </div>
+                        <div class="mt-8">
+                            <div class="number">3</div>
+                            <h3 class="text-2xl font-bold text-rose-500 mt-4">tiny details</h3>
+                        </div>
+                        <div class="mt-6 prompt">tap me</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="flex justify-center mb-4">
+                            <img src="assets/3-bubuThinking.gif" alt="Bubu thinking" class="w-24 h-24 object-contain" />
+                        </div>
+                        <h3 class="text-2xl font-bold text-rose-500 mb-3">tiny details</h3>
+                        <p>they should be illegal, but somehow i’m always laughing.</p>
+                    </div>
+                </div>
+
+                <div class="reason-card glass-card p-6" onclick="toggleCard(this)">
+                    <div class="card-front">
+                        <div>
+                            <span class="text-sm uppercase tracking-[0.24em] text-rose-400 font-semibold">No 04</span>
+                        </div>
+                        <div class="mt-8">
+                            <div class="number">4</div>
+                            <h3 class="text-2xl font-bold text-rose-500 mt-4">u let me be weird</h3>
+                        </div>
+                        <div class="mt-6 prompt">tap me</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="flex justify-center mb-4">
+                            <img src="assets/4-bubuKissedDudu.gif" alt="Bubu kissed Dudu" class="w-24 h-24 object-contain" />
+                        </div>
+                        <h3 class="text-2xl font-bold text-rose-500 mb-3">u let me be weird</h3>
+                        <p>no judgement, ever. even for the cursed 3am thoughts.</p>
+                    </div>
+                </div>
+
+                <div class="reason-card glass-card p-6" onclick="toggleCard(this)">
+                    <div class="card-front">
+                        <div>
+                            <span class="text-sm uppercase tracking-[0.24em] text-rose-400 font-semibold">No 05</span>
+                        </div>
+                        <div class="mt-8">
+                            <div class="number">5</div>
+                            <h3 class="text-2xl font-bold text-rose-500 mt-4">your soft eyes</h3>
+                        </div>
+                        <div class="mt-6 prompt">tap me</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="flex justify-center mb-4">
+                            <img src="assets/5-bubuKissed.gif" alt="Bubu kissed" class="w-24 h-24 object-contain" />
+                        </div>
+                        <h3 class="text-2xl font-bold text-rose-500 mb-3">your soft eyes</h3>
+                        <p>when u look at me like that… brain.exe stops working fr.</p>
+                    </div>
+                </div>
+
+                <div class="reason-card glass-card p-6" onclick="toggleCard(this)">
+                    <div class="card-front">
+                        <div>
+                            <span class="text-sm uppercase tracking-[0.24em] text-rose-400 font-semibold">No 06</span>
+                        </div>
+                        <div class="mt-8">
+                            <div class="number">6</div>
+                            <h3 class="text-2xl font-bold text-rose-500 mt-4">your bad jokes</h3>
+                        </div>
+                        <div class="mt-6 prompt">tap me</div>
+                    </div>
+                    <div class="card-back">                        <div class="flex justify-center mb-4">
+                            <img src="assets/6-BUBU.gif" alt="Bubu" class="w-24 h-24 object-contain" />
+                        </div>                        <h3 class="text-2xl font-bold text-rose-500 mb-3">your bad jokes</h3>
+                        <p>they should be illegal, but somehow i’m always laughing.</p>
+                    </div>
+                </div>
+
+                <div class="reason-card glass-card p-6" onclick="toggleCard(this)">
+                    <div class="card-front">
+                        <div>
+                            <span class="text-sm uppercase tracking-[0.24em] text-rose-400 font-semibold">No 07</span>
+                        </div>
+                        <div class="mt-8">
+                            <div class="number">7</div>
+                            <h3 class="text-2xl font-bold text-rose-500 mt-4">comfy silence</h3>
+                        </div>
+                        <div class="mt-6 prompt">tap me</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="flex justify-center mb-4">
+                            <img src="assets/7-BUBU.gif" alt="Bubu" class="w-24 h-24 object-contain" />
+                        </div>
+                        <h3 class="text-2xl font-bold text-rose-500 mb-3">comfy silence</h3>
+                        <p>even when we say nothing, it still feels like everything.</p>
+                    </div>
+                </div>
+
+                <div class="reason-card glass-card p-6" onclick="toggleCard(this)">
+                    <div class="card-front">
+                        <div>
+                            <span class="text-sm uppercase tracking-[0.24em] text-rose-400 font-semibold">No 08</span>
+                        </div>
+                        <div class="mt-8">
+                            <div class="number">8</div>
+                            <h3 class="text-2xl font-bold text-rose-500 mt-4">u make me better</h3>
+                        </div>
+                        <div class="mt-6 prompt">tap me</div>
+                    </div>
+                    <div class="card-back">                        <div class="flex justify-center mb-4">
+                            <img src="assets/8-BUBU.gif" alt="Bubu" class="w-24 h-24 object-contain" />
+                        </div>                        <h3 class="text-2xl font-bold text-rose-500 mb-3">u make me better</h3>
+                        <p>somehow i wanna be a softer human bec of u. it’s annoying. ily.</p>
+                    </div>
+                </div>
+
+                <div class="reason-card glass-card p-6" onclick="toggleCard(this)">
+                    <div class="card-front">
+                        <div>
+                            <span class="text-sm uppercase tracking-[0.24em] text-rose-400 font-semibold">No 09</span>
+                        </div>
+                        <div class="mt-8">
+                            <div class="number">9</div>
+                            <h3 class="text-2xl font-bold text-rose-500 mt-4">my fav human</h3>
+                        </div>
+                        <div class="mt-6 prompt">tap me</div>
+                    </div>
+                    <div class="card-back">                        <div class="flex justify-center mb-4">
+                            <img src="assets/9-BUBUDUDUDANCE.gif" alt="Bubu Dudu dance" class="w-24 h-24 object-contain" />
+                        </div>                        <h3 class="text-2xl font-bold text-rose-500 mb-3">my fav human</h3>
+                        <p>like out of every single human, it’s u. easily, no contest.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- LOOK AT US -->
+    <section class="py-12 sm:py-16 md:py-20 px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto">
+
+            <div class="text-center mb-8 sm:mb-12 md:mb-16">
+                <h2 class="section-title text-3xl sm:text-4xl md:text-5xl font-bold text-rose-500">
+                    Look At Us 📸
+                </h2>
+            </div>
+
+            <div class="grid gap-6 sm:gap-8 md:gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+
+                <div class="polaroid rotate-left">
+                    <img
+                        src="assets/foreverTogether.jpg"
+                        class="rounded-xl w-full"
+                        alt="Forever Together"
+                    >
+                    <p class="text-center mt-4 font-bold text-rose-400">
+                        Forever Together 💕
+                    </p>
+                </div>
+
+                <div class="polaroid">
+                    <img
+                        src="assets/sweetMemories.jpg"
+                        class="rounded-xl w-full"
+                        alt="Sweet Memories"
+                    >
+                    <p class="text-center mt-4 font-bold text-rose-400">
+                        Sweet Memories ✨
+                    </p>
+                </div>
+
+                <div class="polaroid rotate-right">
+                    <img
+                        src="assets/specialPerson.jpg"
+                        class="rounded-xl w-full"
+                        alt="Special Person"
+                    >
+                    <p class="text-center mt-4 font-bold text-rose-400">
+                        My Favorite Person 🌸
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- AND LIKE A MILLION MORE -->
+    <section class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+
+            <span class="inline-block px-4 sm:px-6 py-2 rounded-full bg-purple-300/60 text-purple-700 text-xs sm:text-sm font-semibold mb-6 sm:mb-8">
+                i reset thing pls —
+            </span>
+
+            <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
+                and like... a <span class="text-rose-400">million more</span>
+            </h2>
+
+            <p class="text-gray-600 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 px-2">
+                i couldn't fit them all here. the wifi would die.
+            </p>
+            <p class="text-gray-500 text-sm sm:text-base mb-8 sm:mb-12">
+                tap the heart if u get what i mean 😭
+            </p>
+
+            <!-- Interactive Heart -->
+            <div class="flex justify-center mb-8 sm:mb-12">
+                <div class="relative w-32 sm:w-40 md:w-48 h-32 sm:h-40 md:h-48 cursor-pointer transition-transform duration-300 hover:scale-110" onclick="expandHearts(event)">
+                    <style>
+                        .heart-container {
+                            filter: drop-shadow(0 20px 40px rgba(236, 72, 153, 0.3));
+                        }
+                        .heart-layer {
+                            position: absolute;
+                            inset: 0;
+                        }
+                        .heart-outer {
+                            animation: heartFloat 2s ease-in-out infinite;
+                        }
+                        .heart-mid {
+                            animation: heartFloat 2s ease-in-out infinite 0.1s;
+                        }
+                        .heart-core {
+                            animation: heartBeat 1.5s ease-in-out infinite;
+                        }
+                        @keyframes heartFloat {
+                            0%, 100% { transform: scale(1); }
+                            50% { transform: scale(1.05); }
+                        }
+                    </style>
+                    
+                    <div class="heart-container w-full h-full">
+                        <!-- Outer glow heart -->
+                        <svg class="heart-layer heart-outer" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <path d="M50,90 C20,70 5,55 5,40 C5,25 15,15 28,15 C38,15 48,22 50,30 C52,22 62,15 72,15 C85,15 95,25 95,40 C95,55 80,70 50,90 Z" 
+                                  fill="#f9a8d4" opacity="0.5" filter="url(#glow)"/>
+                        </svg>
+
+                        <!-- Middle heart -->
+                        <svg class="heart-layer heart-mid" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50,90 C20,70 5,55 5,40 C5,25 15,15 28,15 C38,15 48,22 50,30 C52,22 62,15 72,15 C85,15 95,25 95,40 C95,55 80,70 50,90 Z" 
+                                  fill="#ec4899" opacity="0.7"/>
+                        </svg>
+
+                        <!-- Core red heart -->
+                        <svg class="heart-layer heart-core" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50,90 C20,70 5,55 5,40 C5,25 15,15 28,15 C38,15 48,22 50,30 C52,22 62,15 72,15 C85,15 95,25 95,40 C95,55 80,70 50,90 Z" 
+                                  fill="#e11d48"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center items-center gap-2 text-rose-500 font-bold text-lg">
+                <span>❤</span>
+                <span>made for u. only u.</span>
+                <span>❤</span>
+            </div>
+
+            <div class="mt-12">
+                <div class="gift-card glass-card mx-auto max-w-md p-8 text-center bg-white/90">
+                    <h3 class="text-2xl font-bold text-rose-500 mb-3">a little gift for you</h3>
+                    <p class="text-sm text-rose-600 mb-6">tap the button and enjoy the surprise with sound.</p>
+                    <button class="gift-button inline-flex items-center justify-center rounded-full bg-rose-500 px-8 py-3 text-white text-sm font-semibold transition hover:bg-rose-600 focus:outline-none" onclick="openGiftVideo()">
+                        Tap to gift
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div id="videoOverlay" class="video-overlay" onclick="if(event.target === this) closeGiftVideo()">
+        <div class="video-box">
+            <button class="video-close" onclick="closeGiftVideo()" aria-label="Close video">✕ Close</button>
+            <video id="giftVideo" controls playsinline preload="metadata">
+                <source src="assets/giftSamWari.mp4" type="video/mp4">
+                <source src="assets/giftSamWari.MOV" type="video/quicktime">
+                Your browser does not support embedded video.
+            </video>
+            <p id="videoError" class="video-error hidden">If the video doesn't play, try opening <a href="assets/giftSamWari.mp4" target="_blank" rel="noopener noreferrer" class="underline">this MP4 file</a> in your device's video player.</p>
+            <div id="giftHearts" class="heart-fall-container" aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-8 sm:py-10 md:py-12 px-4">
+        <p class="text-sm sm:text-base md:text-lg text-rose-400 font-bold">
+            Made with ❤️, cuddles and lots of Bubu & Dudu energy.
+        </p>
+    </footer>
+
+</main>
+
+<script>
+function expandHearts(event) {
+    const heart = event.currentTarget;
+    heart.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+        heart.style.transform = 'scale(1)';
+    }, 300);
+    launchConfetti();
+}
+
+function swapHeroImage(img) {
+    img.style.opacity = '0';
+    img.style.transform = 'scale(0.9) rotateY(180deg)';
+    
+    setTimeout(() => {
+        if (img.src.includes('bubuEyeBlink.gif')) {
+            img.src = 'assets/origBubu.jpg';
+        } else {
+            img.src = 'assets/bubuEyeBlink.gif';
+        }
+        img.style.opacity = '1';
+        img.style.transform = 'scale(1) rotateY(0deg)';
+    }, 300);
+}
+
+function toggleCard(card) {
+    card.classList.toggle('active');
+}
+
+function openGiftVideo() {
+    const overlay = document.getElementById('videoOverlay');
+    const video = document.getElementById('giftVideo');
+    const errorText = document.getElementById('videoError');
+    overlay.classList.add('active');
+    errorText.classList.add('hidden');
+    video.pause();
+    video.currentTime = 0;
+    video.muted = false;
+    video.load();
+
+    video.onerror = () => {
+        errorText.classList.remove('hidden');
+    };
+    video.controls = true;
+    video.style.zIndex = 1;
+
+    video.onended = closeGiftVideo;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+        playPromise.catch(() => {
+            errorText.classList.remove('hidden');
+        });
+    }
+
+    createGiftHearts();
+}
+
+function closeGiftVideo() {
+    const overlay = document.getElementById('videoOverlay');
+    const video = document.getElementById('giftVideo');
+    const errorText = document.getElementById('videoError');
+    overlay.classList.remove('active');
+    video.pause();
+    video.currentTime = 0;
+    video.onended = null;
+    errorText.classList.add('hidden');
+    clearGiftHearts();
+}
+
+function createGiftHearts() {
+    const container = document.getElementById('giftHearts');
+    if (!container || container.children.length) return;
+
+    for (let i = 0; i < 18; i += 1) {
+        const heart = document.createElement('span');
+        heart.className = 'falling-heart';
+        heart.style.left = `${Math.random() * 95}%`;
+        heart.style.animationDuration = `${5 + Math.random() * 4}s`;
+        heart.style.animationDelay = `${Math.random() * 2}s`;
+        heart.style.opacity = `${0.6 + Math.random() * 0.3}`;
+        container.appendChild(heart);
+    }
+}
+
+function clearGiftHearts() {
+    const container = document.getElementById('giftHearts');
+    if (container) container.innerHTML = '';
+}
+
+/* -------------------------
+   FULL PAGE CONFETTI EFFECT
+--------------------------*/
+
+const myCanvas = document.getElementById('confetti-canvas');
+
+const myConfetti = confetti.create(myCanvas, {
+    resize: true,
+    useWorker: true
+});
+
+function launchConfetti() {
+    myConfetti({
+        particleCount: 90,
+        spread: 120,
+        startVelocity: 35,
+        ticks: 250,
+        origin: {
+            x: Math.random(),
+            y: Math.random() * 0.5
+        },
+        scalar: 1.05
+    });
+}
+
+/* Initial burst */
+launchConfetti();
+
+/* Continuous romantic effect */
+setInterval(() => {
+    launchConfetti();
+}, 2500);
+
+/* Extra side fireworks */
+setInterval(() => {
+
+    myConfetti({
+        particleCount: 30,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 }
+    });
+
+    myConfetti({
+        particleCount: 30,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 }
+    });
+
+}, 4000);
+</script>
+
+</body>
+</html>
